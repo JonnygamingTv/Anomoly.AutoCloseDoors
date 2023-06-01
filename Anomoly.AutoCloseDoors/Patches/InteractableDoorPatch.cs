@@ -40,9 +40,9 @@ namespace Anomoly.AutoCloseDoors.Patches
             if (config.AllowAutoCloseUnclaimedDoors && __instance.owner.m_SteamID.ToString() != player.channel.owner.playerID.steamID.m_SteamID.ToString())
                 return;
 
-            int delay = 5;
+            int delay = 2;
 
-            if(config.CloseDelay >= 5)
+            if(config.CloseDelay >= 2)
                 delay = config.CloseDelay;
 
             bool shouldCancel = false;
