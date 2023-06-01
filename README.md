@@ -1,6 +1,11 @@
 # Anomoly.AutoCloseDoors
 A RocketMod Unturned plugin that automatically closes doors after a set amount of time.
 
+## Commands
+- `/autodoor` - Toggle the enabled status of the "auto doors."
+  - Aliases: `/ad`
+  - Permission: `autodoor`
+
 ## Configuration
 - `AllowAutoCloseUnclaimedDoors` - Whether or not to allow doors to be automatically closed for wooden doors.
 - `CancelOnPlayerDead` - Whether or not to cancel the door closing if the player dies.
