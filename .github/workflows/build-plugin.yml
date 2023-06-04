@@ -1,0 +1,33 @@
+name: Build Plugin
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
+
+jobs:
+    build:
+        runs-on: windows-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v2
+
+            - name: Setup MSBuild
+              uses: microsoft/setup-msbuild@v1.0.2
+              with:
+                  msbuild-version: '16.0'
+
+            - name: Build plugin
+              run: |
+                  cd Anomoly.AutoCloseDoors
+                  msbuild /p:Configuration=Release
+
+            - name: Archive artifacts
+              uses: actions/upload-artifact@v2
+              with:
+                  name: plugin-artifact
+                  path: Anomoly.AutoCloseDoors/bin/Release # Replace with the path to your plugin's build output
