@@ -9,7 +9,7 @@ A RocketMod Unturned plugin that automatically closes doors after a set amount o
 ## Configuration
 - `AllowAutoCloseUnclaimedDoors` - Whether or not to allow doors to be automatically closed for wooden doors.
 - `CancelOnPlayerDead` - Whether or not to cancel the door closing if the player dies.
-- `CloseDelay` - The amount of time in seconds to wait before closing the door.
+- `CloseDelay` - The amount of time in seconds to wait before closing the door. Min: 2
 - `DefaultEnabled` - Whether or not the plugin is enabled by default.
 - `DisplayDoorClosedMessage` - Whether or not to display a message when a door is closed.
 - `MessageColor` - The color of the message when a door is closed
