@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Rocket.Core.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,35 +11,50 @@ namespace Anomoly.AutoCloseDoors.Storage
 {
     public class JsonStorage<TData> where TData: class
     {
-        private string _filePath;
-        private TData _initial;
-        public TData Data { get; set; }
+        private string _file;
+        private TData _initialData;
+        
 
-
-        public JsonStorage(string filePath, TData initialData)
+        public TData Instance { get; private set; }
+        
+        public JsonStorage(string file, TData initialData)
         {
-            _filePath = filePath;
-            _initial = initialData;
-            Load();
+            _file = file;
+            _initialData = initialData;
         }
 
         public void Save()
         {
-            File.WriteAllText(_filePath, JsonConvert.SerializeObject(Data));
+            try
+            {
+                if(Instance != null)
+                {
+                    var json = JsonConvert.SerializeObject(Instance);
+
+                    File.WriteAllText(_file, json);
+                }
+            }
+            catch(Exception ex) { Logger.LogException(ex, $"Failed to save data for path: {_file}"); }
         }
 
         public void Load()
         {
-            if (!File.Exists(_filePath))
+            try
             {
-                File.WriteAllText(_filePath, JsonConvert.SerializeObject(_initial));
-                Data = _initial;
+                if (!File.Exists(_file))
+                {
+                    var initialJson = JsonConvert.SerializeObject(_initialData);
+                    File.WriteAllText(_file, initialJson);
+
+                    Instance = _initialData;
+                    return;
+                }
+
+                var json = File.ReadAllText(_file);
+
+                Instance = JsonConvert.DeserializeObject<TData>(json);
             }
-            else
-            {
-                var json = File.ReadAllText(_filePath);
-                Data = JsonConvert.DeserializeObject<TData>(json);
-            }
+            catch(Exception ex) { Logger.LogException(ex, $"Failed to load data for path: {_file}"); }
         }
     }
 }

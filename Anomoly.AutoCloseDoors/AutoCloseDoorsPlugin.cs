@@ -46,6 +46,9 @@ namespace Anomoly.AutoCloseDoors
             if (Configuration.Instance.CancelOnPlayerDead)
                 PlayerDeathService = new PlayerDeathService();
             U.Events.OnPlayerConnected += Events_OnPlayerConnected;
+
+            Logger.Log("AutoCloseDoors by Anomoly has loaded!");
+            Logger.Log("Need support? Join my Discord: https://discord.gg/rVH9e7Kj9y");
         }
 
         private void Events_OnPlayerConnected(Rocket.Unturned.Player.UnturnedPlayer player)
@@ -64,6 +67,7 @@ namespace Anomoly.AutoCloseDoors
             if(PlayerDeathService != null)
                 PlayerDeathService.Unload();
             U.Events.OnPlayerConnected -= Events_OnPlayerConnected;
+            Logger.Log("Unloaded AutoCloseDoors by Anomoly.");
         }
 
         public override TranslationList DefaultTranslations => new TranslationList()

@@ -16,11 +16,12 @@ namespace Anomoly.AutoCloseDoors.Service
         public PlayerConfigService()
         {
             PlayerData = new JsonStorage<List<AutoDoorPlayer>>(Path.Combine(AutoCloseDoorsPlugin.Instance.Directory, "AutoDoors_Players.json"), new List<AutoDoorPlayer>());
+            PlayerData.Load();
         }
 
         public AutoDoorPlayer GetPlayer(string playerId)
         {
-            var player = PlayerData.Data.FirstOrDefault(p => p.SteamId == playerId);
+            var player = PlayerData.Instance.FirstOrDefault(p => p.SteamId == playerId);
 
             if(player == null)
             {
@@ -29,7 +30,7 @@ namespace Anomoly.AutoCloseDoors.Service
                     SteamId = playerId,
                     Enabled = AutoCloseDoorsPlugin.Instance.Configuration.Instance.DefaultEnabled,
                 };
-                PlayerData.Data.Add(player);
+                PlayerData.Instance.Add(player);
                 PlayerData.Save();
             }
 
