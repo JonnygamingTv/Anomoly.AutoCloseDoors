@@ -14,48 +14,40 @@ namespace Anomoly.AutoCloseDoors.Service
 
         public class DoorPlayer
         {
-            public Player Player { get; set; }
+            //public Player Player { get; set; }
             public System.Action DeathCallback { get; set; }
 
         }
 
-        private List<DoorPlayer> _doorPlayers;
+        private Dictionary<Player, DoorPlayer> _doorPlayers;
 
         public PlayerDeathService() {
 
-            _doorPlayers = new List<DoorPlayer>();
+            _doorPlayers = new Dictionary<Player, DoorPlayer>();
             UnturnedPlayerEvents.OnPlayerDeath += UnturnedPlayerEvents_OnPlayerDeath;
             Logger.Log("Player Death service has loaded!");
         }
 
         private void UnturnedPlayerEvents_OnPlayerDeath(Rocket.Unturned.Player.UnturnedPlayer player, SDG.Unturned.EDeathCause cause, SDG.Unturned.ELimb limb, Steamworks.CSteamID murderer)
         {
-            if (AutoCloseDoorsPlugin.Instance.Configuration.Instance.CancelOnPlayerDead)
+            if (AutoCloseDoorsPlugin.Instance.Configuration.Instance.CancelOnPlayerDead && _doorPlayers.TryGetValue(player.Player, out DoorPlayer doorPlayer))
             {
-                var doorPlayer = _doorPlayers.FirstOrDefault(x => x.Player == player.Player);
-
-                if(doorPlayer == null)
-                {
-                    RemovePlayer(doorPlayer.Player);
-                }
-
                 doorPlayer.DeathCallback.Invoke();
-                RemovePlayer(doorPlayer.Player);
+                RemovePlayer(player.Player);
             }
         }
 
         public void AddPlayer(Player player, System.Action callback)
         {
-            _doorPlayers.Add(new DoorPlayer()
+            _doorPlayers.Add(player, new DoorPlayer()
             {
-                Player = player,
                 DeathCallback = callback,
             });
         }
 
         public void RemovePlayer(Player player)
         {
-            _doorPlayers.RemoveAll(x => x.Player == player);
+            _doorPlayers.Remove(player);
         }
 
         public void Unload()
